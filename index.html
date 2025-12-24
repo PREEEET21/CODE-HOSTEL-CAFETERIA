@@ -64,17 +64,17 @@ document.getElementById("form").addEventListener("submit", function(e) {
   headers: {
     "Content-Type": "application/json"
   },
-  body: JSON.stringify({
-    mobile: mobile,
-    meal: meal
-  })
+  body: JSON.stringify({})
 })
-.then(res => res.text())
-.then(data => msg.innerText = data)
-.catch(() => msg.innerText = "❌ Error connecting backend");
+.then(res => res.json())
+.then(data => {
+  msg.innerText = data.message;
+})
+.catch(err => {
+  console.error(err);
+  msg.innerText = "❌ Error connecting backend";
 });
 </script>
 
 </body>
-
 </html>
