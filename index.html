@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Code Hostel Mess Attendance</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      background: #0f172a;
+      color: white;
+      font-family: Arial;
+      text-align: center;
+      padding: 20px;
+    }
+    input, select, button {
+      width: 90%;
+      padding: 14px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      background: #22c55e;
+      font-weight: bold;
+    }
+    #msg {
+      margin-top: 15px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>🍽️ Code Hostel Mess Attendance</h2>
+
+<form id="form">
+  <input type="tel" id="mobile" placeholder="Enter Mobile Number" required pattern="[0-9]{10}">
+
+  <select id="meal" required>
+    <option value="">Select Meal</option>
+    <option>Breakfast</option>
+    <option>Lunch</option>
+    <option>Dinner</option>
+  </select>
+
+  <button type="submit">Mark Attendance</button>
+</form>
+
+<p id="msg"></p>
+
+<script>
+document.getElementById("form").addEventListener("submit", function(e) {
+  e.preventDefault();
+
+  var mobile = document.getElementById("mobile").value;
+  var meal = document.getElementById("meal").value;
+  var msg = document.getElementById("msg");
+
+  msg.innerText = "Checking...";
+
+  fetch("https://script.google.com/macros/s/AKfycby1JMUw9e4TpdcoR8jVeEAQWzBb1HHxvttSUUMtU7MC805BFQEj-MCG7qk2URoWKMQT_Q/exec", {
+    method: "POST",
+    body: JSON.stringify({
+      mobile: mobile,
+      meal: meal
+    })
+  })
+  .then(res => res.text())
+  .then(data => msg.innerText = data);
+});
+</script>
+
+</body>
+</html>
