@@ -70,10 +70,10 @@ document.getElementById("form").addEventListener("submit", function(e) {
   })
 })
 .then(res => res.text())
-.then(data => msg.innerText = data);
+.then(data => msg.innerText = data)
+.catch(() => msg.innerText = "❌ Error connecting backend");
 });
 </script>
 
 </body>
-
 </html>
