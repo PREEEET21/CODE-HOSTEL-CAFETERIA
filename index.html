@@ -59,15 +59,18 @@ document.getElementById("form").addEventListener("submit", function(e) {
 
   msg.innerText = "Checking...";
 
-  fetch("https://script.google.com/macros/s/AKfycby1JMUw9e4TpdcoR8jVeEAQWzBb1HHxvttSUUMtU7MC805BFQEj-MCG7qk2URoWKMQT_Q/exec", {
-    method: "POST",
-    body: JSON.stringify({
-      mobile: mobile,
-      meal: meal
-    })
+  fetch("https://script.google.com/macros/s/AKfycb1JMUw9e4TpdCOR8jVeEAQwzBb1HHxvttSUUMTU7MC805BFQEJ-MCG7qk2UR0WKMQT_Q/exec", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    mobile: mobile,
+    meal: meal
   })
-  .then(res => res.text())
-  .then(data => msg.innerText = data);
+})
+.then(res => res.text())
+.then(data => msg.innerText = data);
 });
 </script>
 
