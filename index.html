@@ -49,31 +49,59 @@
 
 <p id="msg"></p>
 
-<script>
-document.getElementById("form").addEventListener("submit", function(e) {
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, get, set } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAEiAGwYe0ygHCpXBtmpjwYBY2OucdwLxQ",
+  authDomain: "codehostelcafeteria.firebaseapp.com",
+  databaseURL: "https://codehostelcafeteria-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "codehostelcafeteria",
+  storageBucket: "codehostelcafeteria.firebasestorage.app",
+  messagingSenderId: "1048067218132",
+  appId: "1:1048067218132:web:890fb4ba34c064ad87f941",
+  measurementId: "G-DD3ZYJ1TC6"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+document.getElementById("form").addEventListener("submit", async function(e){
   e.preventDefault();
 
-  var mobile = document.getElementById("mobile").value;
-  var meal = document.getElementById("meal").value;
-  var msg = document.getElementById("msg");
-
+  let mobile = document.getElementById("mobile").value;
+  let meal   = document.getElementById("meal").value;
+  let msg    = document.getElementById("msg");
   msg.innerText = "Checking...";
 
-  fetch("https://script.google.com/macros/s/AKfycby1JMUw9e4TpdcoR8jVeEAQWzBb1HHxvttSUUMtU7MC805BFQEj-MCG7qk2URoWKMQT_Q/exec", {
-  method: "POST",
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify({
-    mobile: mobile,
-    meal: meal
-  })
-})
-.then(res => res.json())
-.then(data => msg.innerText = data.message)
-.catch(() => msg.innerText = "❌ Error connecting backend");
+  const today = new Date().toISOString().split("T")[0];
+
+  // 1. Check student exists
+  const stuRef = ref(db, "students/" + mobile);
+  const stuSnap = await get(stuRef);
+
+  if(!stuSnap.exists()){
+    msg.innerText = "❌ Student Not Registered";
+    return;
+  }
+
+  let student = stuSnap.val();
+
+  // 2. Check duplicate
+  const attRef = ref(db, `attendance/${today}/${mobile}/${meal}`);
+  const attSnap = await get(attRef);
+
+  if(attSnap.exists()){
+    msg.innerText = "⚠ Attendance Already Taken";
+    return;
+  }
+
+  // 3. Save attendance
+  await set(attRef, true);
+
+  msg.innerText = `✅ Attendance Marked for ${student.name}`;
 });
 </script>
-
 </body>
 </html>
